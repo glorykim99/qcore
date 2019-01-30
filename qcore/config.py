@@ -9,8 +9,6 @@ COMMON_CONFIG = {"ROOT": "/nesi/project/nesi00213",
 
 OPT_DIR = "/nesi/project/nesi00213/opt"
 
-HOSTNAME = platform.node()[:-2]  # maui01 --> maui
-
 
 def get_host_config(bin_name='emod3d', version='3.0.4-gcc', write=False):
     """
@@ -22,18 +20,25 @@ def get_host_config(bin_name='emod3d', version='3.0.4-gcc', write=False):
     :return: config data dict
     """
     config_data = COMMON_CONFIG
+    hostname = platform.node()
 
-    if HOSTNAME == 'maui' or HOSTNAME == 'mahuika':
-        basename = os.path.join('machine_config', 'config_{}.json'.format(HOSTNAME))
+    if hostname.startswith("ni") and len(hostname) == 8:  # maui
+        basename = os.path.join('machine_config', 'config_maui.json')
         config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), basename)
-        tools_dir = os.path.join(OPT_DIR, HOSTNAME, bin_name, version, 'bin')
-    else:  #hypocentre
-        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
+        tools_dir = os.path.join(OPT_DIR, 'maui', bin_name, version, 'bin')
+   
+    elif hostname.startswith("mahuika") and len(hostname) == 6: # mahuika
+        basename = os.path.join('machine_config', 'config_mahuika.json')
+        tools_dir = os.path.join(OPT_DIR, 'mahuika', bin_name, version, 'bin')
+   
+    else:  # default
+        basename = 'config.json'
         tools_dir = os.path.join(COMMON_CONFIG['ROOT'], 'tools')
 
     config_data['tools_dir'] = tools_dir
 
     if write:
+        config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), basename)
         with open(config_file, 'w') as f:
             json.dump(config_data, f)
 
