@@ -7,7 +7,7 @@ COMMON = {"ROOT": "/nesi/project/nesi00213",
           "VEL_MOD": "/nesi/project/nesi00213/VelocityModel",
           "wallclock": "/nesi/project/nesi00213/share/wallclock.sqlite"}
 
-OPT_DIR = "/nesi/project/nesi00213/opt"}
+OPT_DIR = "/nesi/project/nesi00213/opt"
 
 HOSTNAME = platform.node()[:-2]  # maui01 --> maui
 
