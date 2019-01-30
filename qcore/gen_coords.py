@@ -5,9 +5,10 @@ import os
 from subprocess import check_call
 import sys
 
-from qcore.config import qconfig
+from qcore.config import get_host_config
 
-GEN_COORD_BIN = os.path.join(qconfig['tools_dir'], 'gen_model_cords')
+GEN_COORD_BIN = os.path.join(get_host_config()['tools_dir'], 'gen_model_cords')
+
 
 def gen_coords(vm_dir = '.', debug = False, geoproj = '1', do_coords = '1', \
         centre_origin = '1'):

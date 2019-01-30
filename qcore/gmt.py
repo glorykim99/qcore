@@ -20,7 +20,7 @@ from time import time
 
 import numpy as np
 
-from qcore.config import qconfig
+from qcore.config import COMMON_CONFIG
 
 # only needed if plotting fault planes direct from SRF
 try:
@@ -50,7 +50,7 @@ STATUS_INVALID = 1
 # GMT 5.2+ argument mapping
 GMT52_POS = {'map':'g', 'plot':'x', 'norm':'n', 'rel':'j', 'rel_out':'J'}
 
-GMT_DATA = qconfig['GMT_DATA']
+GMT_DATA = COMMON_CONFIG['GMT_DATA']
 # LINZ DATA
 LINZ_COAST = {
         '150k':os.path.join(GMT_DATA, 'Paths/lds-nz-coastlines-and-islands/150k.gmt')

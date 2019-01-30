@@ -6,11 +6,12 @@ import sys
 
 import sqlite3
 
-from qcore.config import qconfig
+from qcore.config import COMMON_CONFIG
+
 
 class WallClockDB:
 
-    def __init__(self, db_path = qconfig['wallclock']):
+    def __init__(self, db_path = COMMON_CONFIG['wallclock']):
         self.db_path = db_path
 
     def max_avg_min(self):

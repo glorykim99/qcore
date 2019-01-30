@@ -8,10 +8,10 @@ from math import sin, asin, cos, atan, atan2, degrees, radians, sqrt, pi
 
 import numpy as np
 
-from qcore.config import qconfig
+from qcore.config import get_host_config
 
-ll2xy_bin = os.path.join(qconfig['tools_dir'], 'll2xy')
-xy2ll_bin = os.path.join(qconfig['tools_dir'], 'xy2ll')
+ll2xy_bin = os.path.join(get_host_config()['tools_dir'], 'll2xy')
+xy2ll_bin = os.path.join(get_host_config()['tools_dir'], 'xy2ll')
 
 R_EARTH = 6378.139
 

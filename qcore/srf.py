@@ -15,10 +15,10 @@ from subprocess import Popen, PIPE
 
 import numpy as np
 
-from qcore.config import qconfig
+from qcore.config import get_host_config
 
 # binary paths
-srf2xyz = os.path.join(qconfig['tools_dir'], 'srf2xyz')
+srf2xyz = os.path.join(get_host_config()['tools_dir'], 'srf2xyz')
 
 # assumption that all srf files contain 6 values per line
 VPL = 6.
