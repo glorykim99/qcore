@@ -24,7 +24,7 @@ IM_SIM_CALC_INFO_SUFFIX = "_imcalc.info"
 MERGE_TS_DEFAULT_NCORES = 4
 
 HEADER_TEMPLATE = "slurm_header.cfg"
-DEFAULT_ACCOUNT = "nesi00213"
+DEFAULT_ACCOUNT = "DesignSafe-Graves"
 DEFAULT_MEMORY = "16G"
 
 QUEUE_DATE_FORMAT = "%Y%m%d%H%M%S_%f"
@@ -55,9 +55,10 @@ class EstModelType(Enum):
 
 
 class HPC(Enum):
-    maui = "maui"
-    mahuika = "mahuika"
-
+#    maui = "maui"
+#    mahuika = "mahuika"
+    stampede = "stampede2"
+    
 
 class ExtendedEnum(Enum):
     @classmethod
