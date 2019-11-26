@@ -2,17 +2,24 @@ from enum import Enum
 from datetime import datetime
 from typing import List
 
-LF_DEFAULT_NCORES = 160  # 4 nodes, no hyperthreading
-CHECKPOINT_DURATION = 10.0  # in minutes
+CORE_PER_NODE = 64
 
-HF_DEFAULT_NCORES = 80  # 1 node, hyperthreading
+LF_THREADING = 1 #1core 1thread
+LF_DEFAULT_NCORES = 192  # 3 nodes, no hyperthreading
+CHECKPOINT_DURATION = 10.0 # in minutes
+
+HF_THREADING = 1 #1core 4thread
+HF_DEFAULT_NCORES = 256  # 1 node, hyperthreading
+
 HF_DEFAULT_VERSION = "run_hf_mpi"
 HF_DEFAULT_SEED = (
     0
 )  # Causes a random seed to be chosen, unless a previous seed file already exists
 
 BB_DEFAULT_VERSION = "run_bb_mpi"
-BB_DEFAULT_NCORES = 80  # 1 node, hyperthreading
+
+BB_THREADING = 4 #1core 4thread
+BB_DEFAULT_NCORES = 256  # 1 node, hyperthreading
 
 IM_CALC_DEFAULT_N_CORES = 40  # 1 node, no hyperthreading
 IM_CALC_COMPONENTS = ["geom", "000", "090", "ver", "ellipsis"]
@@ -110,7 +117,7 @@ class ProcessType(ExtendedStrEnum):
         "EMOD3D",
         False,
         False,
-        'srun {emod3d_bin} -args "par={lf_sim_dir}/e3d.par"',
+        'ibrun {emod3d_bin} -args "par={lf_sim_dir}/e3d.par"',
         (),
     )
     merge_ts = (
@@ -118,7 +125,7 @@ class ProcessType(ExtendedStrEnum):
         "merge_ts",
         True,
         False,
-        "time srun {merge_ts_path} filelist=$filelist outfile=$OUTFILE nfiles=$NFILES",
+        "time ibrun {merge_ts_path} filelist=$filelist outfile=$OUTFILE nfiles=$NFILES",
         (1,),
     )
 
@@ -129,7 +136,7 @@ class ProcessType(ExtendedStrEnum):
         "HF",
         True,
         True,
-        "srun python $gmsim/workflow/scripts/hf_sim.py {fd_statlist} {hf_bin_path} -m {v_mod_1d_name} --duration "
+        "ibrun python $gmsim/workflow/scripts/hf_sim.py {fd_statlist} {hf_bin_path} -m {v_mod_1d_name} --duration "
         "{duration} --dt {dt} --sim_bin {sim_bin_path}",
         (),
     )
@@ -138,7 +145,7 @@ class ProcessType(ExtendedStrEnum):
         "BB",
         True,
         True,
-        "srun python $gmsim/workflow/scripts/bb_sim.py {outbin_dir} {vel_mod_dir} {hf_bin_path} {stat_vs_est} "
+        "ibrun python $gmsim/workflow/scripts/bb_sim.py {outbin_dir} {vel_mod_dir} {hf_bin_path} {stat_vs_est} "
         "{bb_bin_path} --flo {flo}",
         (1, 4),
     )

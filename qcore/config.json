@@ -1,5 +1,5 @@
 {
-    "ROOT" : "/nesi/project/nesi00213",
+    "ROOT" : "/work/06833/sungbae/stampede2",
     "GMT_DATA" : "/work/06833/sungbae/stampede2/PlottingData",
     "VEL_MOD" : "/work/06833/sungbae/stampede2/VelocityModel",
     "wallclock" : "/work/06833/sungbae/stampede2/share/wallclock.sqlite",
