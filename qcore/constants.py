@@ -8,8 +8,8 @@ LF_THREADING = 1 #1core 1thread
 LF_DEFAULT_NCORES = 192  # 3 nodes, no hyperthreading
 CHECKPOINT_DURATION = 10.0 # in minutes
 
-HF_THREADING = 1 #1core 4thread
-HF_DEFAULT_NCORES = 256  # 1 node, hyperthreading
+HF_THREADING = 1 #1core 1thread
+HF_DEFAULT_NCORES = 256  # 4 nodes, no hyperthreading
 
 HF_DEFAULT_VERSION = "run_hf_mpi"
 HF_DEFAULT_SEED = (
@@ -18,10 +18,12 @@ HF_DEFAULT_SEED = (
 
 BB_DEFAULT_VERSION = "run_bb_mpi"
 
-BB_THREADING = 4 #1core 4thread
-BB_DEFAULT_NCORES = 256  # 1 node, hyperthreading
+BB_THREADING = 1 #1core 1thread
+BB_DEFAULT_NCORES = 256  # 4 nodes, no hyperthreading
 
-IM_CALC_DEFAULT_N_CORES = 40  # 1 node, no hyperthreading
+IM_CALC_DEFAULT_N_CORES = 64  # 1 node, no hyperthreading
+IM_CALC_THREADING = 1 #1core 1thread
+
 IM_CALC_COMPONENTS = ["geom", "000", "090", "ver", "ellipsis"]
 
 IM_SIM_CALC_TEMPLATE_NAME = "sim_im_calc.sl.template"
@@ -29,7 +31,7 @@ IM_SIM_SL_SCRIPT_NAME = "sim_im_calc_{}.sl"
 IM_SIM_CALC_INFO_SUFFIX = "_imcalc.info"
 
 MERGE_TS_DEFAULT_NCORES = 4
-
+MERGE_TS_THREADING = 1
 HEADER_TEMPLATE = "slurm_header.cfg"
 DEFAULT_ACCOUNT = "DesignSafe-Graves"
 DEFAULT_MEMORY = "16G"
