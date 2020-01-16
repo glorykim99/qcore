@@ -8,7 +8,6 @@ def determine_machine_config(hostname=platform.node()):
     Determines the machine name eg: nodes ni0002 and maui01 belong to maui.
     :return: machine name, config file
     """
-
     if (hostname.startswith("ni") and len(hostname) == 8) or hostname.startswith(
         "maui"
     ):
@@ -23,6 +22,9 @@ def determine_machine_config(hostname=platform.node()):
     elif hostname.find('stampede') > -1:
         machine = "stampede2"
         basename = "config.json"
+    elif (hostname.startswith("login") or hostname.startswith("node")):
+        machine = "nurion"
+        basename = os.path.join("machine_config", "config_nurion.json")
     else:
         machine = "default"
         basename = "config.json"
