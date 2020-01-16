@@ -20,7 +20,9 @@ def determine_machine_config(hostname=platform.node()):
     ):
         machine = "mahuika"
         basename = os.path.join("machine_config", "config_mahuika.json")
-
+    elif hostname.find('stampede') > -1:
+        machine = "stampede2"
+        basename = "config.json"
     else:
         machine = "default"
         basename = "config.json"
