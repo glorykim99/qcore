@@ -66,7 +66,8 @@ class EstModelType(Enum):
 class HPC(Enum):
 #    maui = "maui"
 #    mahuika = "mahuika"
-    stampede = "stampede2"
+#    stampede = "stampede2"
+     nurion = "nurion"
     
 
 class ExtendedEnum(Enum):
