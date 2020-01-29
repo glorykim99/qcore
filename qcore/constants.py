@@ -9,7 +9,7 @@ LF_DEFAULT_NCORES = 192  # 3 nodes, no hyperthreading
 CHECKPOINT_DURATION = 10.0 # in minutes
 
 HF_THREADING = 1 #1core 1thread
-HF_DEFAULT_NCORES = 256  # 4 nodes, no hyperthreading
+HF_DEFAULT_NCORES = 64  # 1 node, no hyperthreading
 
 HF_DEFAULT_VERSION = "run_hf_mpi"
 HF_DEFAULT_SEED = (
@@ -19,7 +19,7 @@ HF_DEFAULT_SEED = (
 BB_DEFAULT_VERSION = "run_bb_mpi"
 
 BB_THREADING = 1 #1core 1thread
-BB_DEFAULT_NCORES = 256  # 4 nodes, no hyperthreading
+BB_DEFAULT_NCORES = 64  # 1 node, no hyperthreading
 
 IM_CALC_DEFAULT_N_CORES = 64  # 1 node, no hyperthreading
 IM_CALC_THREADING = 1 #1core 1thread
