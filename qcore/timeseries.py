@@ -293,7 +293,7 @@ class LFSeis:
         outbin: path to OutBin folder containing seis files
         """
         self.seis = sorted(glob(os.path.join(outbin, "*seis-*.e3d")))
-        self.e3dpar = os.path.join(outbin, "e3d.par")
+        self.e3dpar = os.path.join(outbin,os.pardir, "e3d.par")
         if not os.path.isfile(self.e3dpar):
             raise ValueError(
                 "The given directory does not contain an e3d.par file. "
