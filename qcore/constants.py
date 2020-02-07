@@ -32,8 +32,8 @@ IM_SIM_CALC_INFO_SUFFIX = "_imcalc.info"
 
 MERGE_TS_DEFAULT_NCORES = 4
 MERGE_TS_THREADING = 1
-HEADER_TEMPLATE = "slurm_header.cfg"
-DEFAULT_ACCOUNT = "DesignSafe-Graves"
+HEADER_TEMPLATE = "pbs_header.cfg"
+DEFAULT_ACCOUNT ="" # "DesignSafe-Graves"
 DEFAULT_MEMORY = "16G"
 
 QUEUE_DATE_FORMAT = "%Y%m%d%H%M%S_%f"
