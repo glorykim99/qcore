@@ -11,6 +11,9 @@ CHECKPOINT_DURATION = 10.0 # in minutes
 HF_THREADING = 1 #1core 1thread
 HF_DEFAULT_NCORES = 256  # 4 nodes, no hyperthreading
 
+import numpy as np
+
+
 HF_DEFAULT_VERSION = "run_hf_mpi"
 HF_DEFAULT_SEED = (
     0
@@ -25,6 +28,7 @@ IM_CALC_DEFAULT_N_CORES = 64  # 1 node, no hyperthreading
 IM_CALC_THREADING = 1 #1core 1thread
 
 IM_CALC_COMPONENTS = ["geom", "000", "090", "ver", "ellipsis"]
+IM_CALC_DEFAULT_N_CORES = 40  # 1 node, no hyperthreading
 
 IM_SIM_CALC_TEMPLATE_NAME = "sim_im_calc.sl.template"
 IM_SIM_SL_SCRIPT_NAME = "sim_im_calc_{}.sl"
@@ -56,6 +60,10 @@ ROOT_DEFAULTS_FILE_NAME = "root_defaults.yaml"
 
 MAXIMUM_EMOD3D_TIMESHIFT_1_VERSION = "3.0.4"
 
+# fmt:off
+DEFAULT_PSA_PERIODS = [0.01, 0.02, 0.03, 0.04, 0.05, 0.075, 0.1, 0.12, 0.15, 0.17, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.9, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6, 7.5, 10.0]
+EXT_PERIOD = np.logspace(start=np.log10(0.01), stop=np.log10(10.0), num=100, base=10)
+# fmt:on
 
 class EstModelType(Enum):
     NN = "NN"
@@ -82,6 +90,12 @@ class ExtendedEnum(Enum):
 
 
 class ExtendedStrEnum(ExtendedEnum):
+    def __new__(cls, value, str_value):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.str_value = str_value
+        return obj
+
     @classmethod
     def has_str_value(cls, str_value):
         return any(str_value == item.str_value for item in cls)
@@ -158,17 +172,20 @@ class ProcessType(ExtendedStrEnum):
         False,
         False,
         "time python $IMPATH/calculate_ims.py {sim_dir}/BB/Acc/BB.bin b -o {sim_dir}/IM_calc/ -np {np} -i "
-        "{sim_name} -r {fault_name} -c {component} -t s {extended} {simple}",
+        "{sim_name} -r {fault_name} -t s {component} {extended} {simple} {advanced_IM}",
         ((5,), (12,), (13,)),
     )
     IM_plot = 7, "IM_plot", None, False, None, (6,)
     rrup = 8, "rrup", None, False, None, ()
-    Empirical = 9, None, None, False, None, (8,)
+    Empirical = 9, "Empirical", None, False, None, (8,)
     Verification = 10, None, None, False, None, (9,)
     clean_up = 11, "clean_up", None, None, None, (6,)
     LF2BB = 12, "LF2BB", None, None, None, (1,)
     HF2BB = 13, "HF2BB", None, None, None, (4,)
     plot_srf = 14, "plot_srf", None, False, None, ()
+
+    # adv_im uses the same base code as IM_calc
+    advanced_IM = (15, "advanced_IM") + IM_calculation[2:]
 
     def __new__(
         cls, value, str_value, is_hyperth, uses_acc, command_template, dependencies
@@ -181,13 +198,6 @@ class ProcessType(ExtendedStrEnum):
         obj.command_template = command_template
         obj.dependencies = dependencies
         return obj
-
-    @classmethod
-    def get_by_name(cls, name):
-        for _, member in cls.__members__.items():
-            if member.str_value == name:
-                return member
-        raise LookupError
 
     def get_remaining_dependencies(
         self, completed_dependencies: List["ProcessType"] = ()
@@ -259,14 +269,6 @@ class MetadataField(ExtendedEnum):
     im_comp_count = "im_components_count"
 
 
-class Components(ExtendedEnum):
-    geom = "geom"
-    c000 = "000"
-    c090 = "090"
-    ver = "ver"
-    ellipsis = "ellipsis"
-
-
 class Status(ExtendedStrEnum):
     """Job status on the HPC"""
 
@@ -276,12 +278,6 @@ class Status(ExtendedStrEnum):
     completed = 4, "completed"
     failed = 5, "failed"
     unknown = 6, "unknown"
-
-    def __new__(cls, value, str_value):
-        obj = object.__new__(cls)
-        obj._value_ = value
-        obj.str_value = str_value
-        return obj
 
 
 class RootParams(Enum):
@@ -368,8 +364,45 @@ class SourceToSiteDist(ExtendedStrEnum):
     R_x = 2, "r_x"
     R_y = 3, "r_y"
 
-    def __new__(cls, value, str_value):
-        obj = object.__new__(cls)
-        obj._value_ = value
-        obj.str_value = str_value
-        return obj
+
+class Components(ExtendedStrEnum):
+    c090 = 0, "090"
+    c000 = 1, "000"
+    cver = 2, "ver"
+    cgeom = 3, "geom"
+    crotd50 = 4, "rotd50"
+    crotd100 = 5, "rotd100"
+    crotd100_50 = 6, "rotd100_50"
+
+    @staticmethod
+    def get_comps_to_calc_and_store(arg_comps: List[str]):
+        """
+        convert arg comps to str_comps for integer_conversion in read_waveform & str comps for writing result
+        :param arg_comps: user input a list of comp(s)
+        :return: two lists of str comps
+        """
+
+        def component_sorter(x):
+            return x.value
+
+        components_to_store = [Components.from_str(c) for c in arg_comps]
+        components_to_store.sort(key=component_sorter)
+
+        horizontal_components = set(list(Components)[:2])
+        basic_components = set(list(Components)[:3])
+        advanced_components = set(list(Components)[3:])
+        advanced_components_to_get = list(
+            advanced_components.intersection(set(components_to_store))
+        )
+
+        if advanced_components_to_get:
+            components_to_get = list(
+                basic_components.intersection(
+                    set(components_to_store) | horizontal_components
+                )
+            )
+            components_to_get.sort(key=component_sorter)
+        else:
+            components_to_get = components_to_store[:]
+
+        return components_to_get, components_to_store
