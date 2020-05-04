@@ -134,7 +134,7 @@ class ProcessType(ExtendedStrEnum):
         "EMOD3D",
         False,
         False,
-        'ibrun {emod3d_bin} -args "par={lf_sim_dir}/e3d.par"',
+        'mpirun {emod3d_bin} -args "par={lf_sim_dir}/e3d.par"',
         (),
     )
     merge_ts = (
@@ -142,7 +142,7 @@ class ProcessType(ExtendedStrEnum):
         "merge_ts",
         True,
         False,
-        "time ibrun {merge_ts_path} filelist=$filelist outfile=$OUTFILE nfiles=$NFILES",
+        "time mpirun {merge_ts_path} filelist=$filelist outfile=$OUTFILE nfiles=$NFILES",
         (1,),
     )
 
@@ -153,7 +153,7 @@ class ProcessType(ExtendedStrEnum):
         "HF",
         True,
         True,
-        "ibrun python $gmsim/workflow/scripts/hf_sim.py {fd_statlist} {hf_bin_path} -m {v_mod_1d_name} --duration "
+        "mpirun python $gmsim/workflow/scripts/hf_sim.py {fd_statlist} {hf_bin_path} -m {v_mod_1d_name} --duration "
         "{duration} --dt {dt} --sim_bin {sim_bin_path}",
         (),
     )
@@ -162,7 +162,7 @@ class ProcessType(ExtendedStrEnum):
         "BB",
         True,
         True,
-        "ibrun python $gmsim/workflow/scripts/bb_sim.py {outbin_dir} {vel_mod_dir} {hf_bin_path} {stat_vs_est} "
+        "mpirun python $gmsim/workflow/scripts/bb_sim.py {outbin_dir} {vel_mod_dir} {hf_bin_path} {stat_vs_est} "
         "{bb_bin_path} --flo {flo}",
         (1, 4),
     )

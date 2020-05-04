@@ -1,7 +1,7 @@
 {
-    "ROOT" : "/home01/x1746a08/gmsim",
-    "GMT_DATA" : "/home01/x1746a08/gmsim/PlottingData",
-    "VEL_MOD" : "/home01/x1746a08/gmsim/VelocityModel",
-    "wallclock" : "/home01/x1746a08/gmsim/share/wallclock.sqlite",
-    "tools_dir" : "/home01/x1746a08/gmsim/tools/"
+    "ROOT" : "/home01/hpc11a02/gmsim",
+    "GMT_DATA" : "/home01/hpc11a02/gmsim/PlottingData",
+    "VEL_MOD" : "/home01/hpc11a02/gmsim/VelocityModel",
+    "wallclock" : "/home01/hpc11a02/gmsim/share/wallclock.sqlite",
+    "tools_dir" : "/home01/hpc11a02/gmsim/tools/"
 }

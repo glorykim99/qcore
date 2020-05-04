@@ -22,19 +22,18 @@ def determine_machine_config(hostname=platform.node()):
     elif hostname.find('stampede') > -1:
         machine = "stampede2"
         basename = "config.json"
-    elif (hostname.startswith("login") or hostname.startswith("node")):
+    elif (hostname.startswith("login") or hostname.startswith("node") or hostname.startswith('nurion')):
         machine = "nurion"
         basename = os.path.join("machine_config", "config_nurion.json")
     else:
         machine = "default"
         basename = "config.json"
-
     config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), basename)
     return machine, config_path
 
 
 def get_machine_config(hostname=platform.node()):
-    _, config_path = determine_machine_config(hostname)
+    _, config_path = determine_machine_config(hostname=hostname)
     with open(config_path, "r") as machine_config_file:
         return json.load(machine_config_file)
 
